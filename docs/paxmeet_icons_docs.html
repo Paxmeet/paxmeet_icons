@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>paxmeet_icons — Documentation</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+          color: #1c1d22; font-size: 12px; line-height: 1.55; margin: 0; }
+  .cover { text-align: center; padding: 40px 0 28px; border-bottom: 3px solid #7c4dff; margin-bottom: 24px; }
+  .cover h1 { font-size: 30px; margin: 0; }
+  .cover h1 span { color: #7c4dff; }
+  .cover p { color: #6b7280; margin: 6px 0 0; }
+  h1 { font-size: 20px; color: #2a1a55; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px; margin-top: 4px; }
+  h2 { font-size: 15px; color: #4c2fa6; margin-top: 22px; }
+  h3 { font-size: 13px; color: #333; margin-top: 16px; }
+  p, li { font-size: 12px; }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px;
+          background: #f3f0ff; color: #5b21b6; padding: 1px 5px; border-radius: 4px; }
+  pre { background: #1a1b22; color: #e7e7ee; padding: 12px 14px; border-radius: 8px; overflow-x: auto; }
+  pre code { background: none; color: inherit; padding: 0; font-size: 11px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+  th, td { border: 1px solid #e5e7eb; padding: 6px 9px; text-align: left; font-size: 11px; vertical-align: top; }
+  th { background: #f5f3ff; color: #4c2fa6; }
+  blockquote { border-left: 3px solid #c4b5fd; margin: 12px 0; padding: 2px 14px; color: #555; background: #faf9ff; }
+  a { color: #6d28d9; text-decoration: none; }
+  section { margin-bottom: 8px; }
+  hr { border: none; border-top: 1px solid #e5e7eb; margin: 20px 0; }
+</style></head>
+<body>
+  <div class="cover">
+    <h1>paxmeet<span>_icons</span></h1>
+    <p>Custom icon-font package — Documentation</p>
+    <p style="font-size:11px;">Install &amp; usage · Adding / renaming / removing icons</p>
+  </div>
+  <section><h1 id="adding-paxmeet_icons-to-a-flutter-project">Adding <code>paxmeet_icons</code> to a Flutter project</h1>
+<p>This guide shows how to use the Paxmeet icon set in any Flutter app. You add the
+package once, then use icons anywhere with <code>Icon(PaxmeetIcons.xxx)</code> — no asset
+files, no font declaration in your app.</p>
+<blockquote>
+<p>Browse all icons and copy their code from the reference page: open
+<a href="../index.html"><code>index.html</code></a> in a browser (or its hosted GitHub Pages URL).</p>
+</blockquote>
+<hr />
+<h2 id="1-add-the-dependency">1. Add the dependency</h2>
+<p>Pick <strong>one</strong> of the following based on where the package lives, and add it under
+<code>dependencies:</code> in your app's <code>pubspec.yaml</code>.</p>
+<h3 id="option-a-same-repo-monorepo-local-path">Option A — Same repo / monorepo (local path)</h3>
+<pre><code class="language-yaml">dependencies:
+  paxmeet_icons:
+    path: ../paxmeet_icons        # relative path to the package folder
+</code></pre>
+<h3 id="option-b-private-git-repo-recommended-for-sharing-across-apps">Option B — Private Git repo (recommended for sharing across apps)</h3>
+<pre><code class="language-yaml">dependencies:
+  paxmeet_icons:
+    git:
+      url: https://github.com/&lt;your-org&gt;/paxmeet_icons.git
+      ref: main                   # or a tag like v0.0.1 to pin a version
+</code></pre>
+<h3 id="option-c-published-on-pubdev-public-package">Option C — Published on pub.dev (public package)</h3>
+<pre><code class="language-yaml">dependencies:
+  paxmeet_icons: ^0.0.1
+</code></pre>
+<h2 id="2-install">2. Install</h2>
+<pre><code class="language-bash">flutter pub get
+# (this project uses fvm, so: fvm flutter pub get)
+</code></pre>
+<h2 id="3-use-an-icon">3. Use an icon</h2>
+<pre><code class="language-dart">import 'package:paxmeet_icons/paxmeet_icons.dart';
+
+// anywhere a widget is allowed:
+Icon(PaxmeetIcons.home);
+
+// with size + color (color comes from Flutter, the font is monochrome):
+Icon(PaxmeetIcons.heart, size: 28, color: Theme.of(context).primaryColor);
+
+// in a button:
+IconButton(
+  icon: const Icon(PaxmeetIcons.search),
+  onPressed: () {},
+);
+</code></pre>
+<p>That's it — the font ships <strong>inside</strong> the package (each <code>IconData</code> already carries
+<code>fontPackage: 'paxmeet_icons'</code>), so you do <strong>not</strong> add anything to the <code>fonts:</code>
+section of your app's <code>pubspec.yaml</code>.</p>
+<hr />
+<h2 id="app-size-nothing-to-worry-about">App size — nothing to worry about</h2>
+<p>The font holds all icons in ~12 KB, and Flutter <strong>tree-shakes</strong> the glyphs you
+don't use out of release builds automatically. You'll see this during a release
+build:</p>
+<pre><code>Font asset &quot;PaxmeetIcons.ttf&quot; was tree-shaken, reducing it from 33 to 6 glyphs (82% reduction).
+</code></pre>
+<p>⚠️ One rule to keep tree-shaking working: always use the constants directly
+(<code>PaxmeetIcons.home</code>). Don't build <code>IconData</code> from a runtime/variable codepoint —
+that disables tree-shaking for the whole font.</p>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Icons show as empty boxes (□)</td>
+<td>Run <code>flutter pub get</code>; do a full restart (not just hot reload) so the new font loads.</td>
+</tr>
+<tr>
+<td><code>Undefined name 'PaxmeetIcons'</code></td>
+<td>Add the import: <code>import 'package:paxmeet_icons/paxmeet_icons.dart';</code></td>
+</tr>
+<tr>
+<td>Git dependency won't resolve</td>
+<td>Check the <code>url</code>/<code>ref</code>; ensure you have access to the repo.</td>
+</tr>
+<tr>
+<td>Wrong icon shows</td>
+<td>Names map to glyphs by codepoint; if you regenerated the font, re-run <code>flutter pub get</code> and restart.</td>
+</tr>
+</tbody>
+</table></section>
+<section style="page-break-before: always;"><h1 id="adding-updating-removing-icons">Adding / updating / removing icons</h1>
+<p>The package turns a folder of SVGs into one icon font. The <strong>single source of
+truth</strong> is the <a href="../alliconsvg/"><code>alliconsvg/</code></a> folder — a flat folder where the
+<strong>filename is the icon name</strong>. You edit that folder, run the build, and the font,
+the Dart class, and the reference webpage all regenerate.</p>
+<pre><code>alliconsvg/home.svg   ─┐
+alliconsvg/heart.svg   ├─ build ─▶  fonts/PaxmeetIcons.ttf
+alliconsvg/search.svg ─┘            lib/paxmeet_icons.dart  →  PaxmeetIcons.home …
+                                    index.html (reference page)
+</code></pre>
+<hr />
+<h2 id="one-time-setup-first-time-on-a-machine">One-time setup (first time on a machine)</h2>
+<p>The build uses <strong>picosvg</strong> (converts strokes→fills) and <strong>icon_font_generator</strong>.</p>
+<pre><code class="language-bash">cd paxmeet_icons
+
+# 1. picosvg (Python) — for stroke/shape normalization
+python3 -m venv tool/.venv
+tool/.venv/bin/pip install picosvg
+
+# 2. icon_font_generator (Dart) — builds the font
+dart pub global activate icon_font_generator
+</code></pre>
+<hr />
+<h2 id="add-a-new-icon">Add a new icon</h2>
+<ol>
+<li><strong>Prepare the SVG.</strong> It must be:</li>
+<li><strong>Single color</strong> (monochrome). The color is applied later in Flutter via
+     <code>Icon(color:)</code>. Multi-color/brand icons cannot be a font glyph.</li>
+<li>Either fill-based <strong>or</strong> stroke-based — both are fine, picosvg converts
+     strokes to filled outlines automatically.</li>
+<li>
+<p>Recommended canvas: <code>24×24</code> viewBox, no embedded raster images.</p>
+</li>
+<li>
+<p><strong>Name it well</strong> and drop it in <code>alliconsvg/</code>:</p>
+</li>
+<li>Use <strong>snake_case</strong>; the filename becomes a <strong>camelCase</strong> Dart identifier.<ul>
+<li><code>add_circle.svg</code>   → <code>PaxmeetIcons.addCircle</code></li>
+<li><code>event_ticket.svg</code> → <code>PaxmeetIcons.eventTicket</code></li>
+</ul>
+</li>
+<li>
+<p>Name by <strong>what the icon depicts</strong> or its <strong>UI meaning</strong>, not the design-tool
+     export name: <code>wallet</code> not <code>empty_wallet</code>, <code>message</code> not <code>message_text</code>,
+     <code>microphone</code> not <code>microphone_2</code>.</p>
+</li>
+<li>
+<p><strong>Build:</strong>
+   <code>bash
+   bash tool/import.sh        # normalize alliconsvg/ -&gt; tool/svgs/ (picosvg)
+   bash tool/generate.sh      # build the .ttf + lib/paxmeet_icons.dart
+   tool/.venv/bin/python tool/build_web.py   # refresh index.html reference page</code></p>
+</li>
+<li>
+<p><strong>Use it:</strong> <code>Icon(PaxmeetIcons.eventTicket)</code>. In an app already depending on
+   the package, run <code>flutter pub get</code> + full restart to pick up the new font.</p>
+</li>
+</ol>
+<blockquote>
+<p>Tip: there's no need to remember the three commands separately — they always
+run together. See <strong>One-command build</strong> below.</p>
+</blockquote>
+<hr />
+<h2 id="rename-an-icon">Rename an icon</h2>
+<ol>
+<li>Rename the file in <code>alliconsvg/</code> (e.g. <code>empty_wallet.svg</code> → <code>wallet.svg</code>).</li>
+<li>Re-run the build (<code>import.sh</code> clears stale files, so the old name disappears).</li>
+<li>Update any usages in apps from <code>PaxmeetIcons.emptyWallet</code> → <code>PaxmeetIcons.wallet</code>.</li>
+</ol>
+<h2 id="remove-an-icon">Remove an icon</h2>
+<ol>
+<li>Delete the file from <code>alliconsvg/</code>.</li>
+<li>Re-run the build. The glyph and its constant are gone.</li>
+</ol>
+<hr />
+<h2 id="one-command-build-optional-convenience">One-command build (optional convenience)</h2>
+<p>Run all three steps at once:</p>
+<pre><code class="language-bash">bash tool/import.sh &amp;&amp; bash tool/generate.sh &amp;&amp; tool/.venv/bin/python tool/build_web.py
+</code></pre>
+<hr />
+<h2 id="how-it-works-reference">How it works (reference)</h2>
+<table>
+<thead>
+<tr>
+<th>Folder / file</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>alliconsvg/</code></td>
+<td><strong>Source of truth</strong> — flat, clean-named SVGs you edit.</td>
+</tr>
+<tr>
+<td><code>tool/import.sh</code></td>
+<td>Normalizes each SVG with picosvg into <code>tool/svgs/</code> (clears old files first).</td>
+</tr>
+<tr>
+<td><code>tool/svgs/</code></td>
+<td>Generated, normalized SVGs — the actual font input. Don't hand-edit.</td>
+</tr>
+<tr>
+<td><code>tool/generate.sh</code></td>
+<td>Runs <code>icon_font_generator</code>: <code>tool/svgs/</code> → <code>.ttf</code> + Dart class.</td>
+</tr>
+<tr>
+<td><code>tool/build_web.py</code></td>
+<td>Builds the self-contained <code>index.html</code> reference page.</td>
+</tr>
+<tr>
+<td><code>fonts/PaxmeetIcons.ttf</code></td>
+<td>The generated font (committed).</td>
+</tr>
+<tr>
+<td><code>lib/paxmeet_icons.dart</code></td>
+<td>The generated <code>PaxmeetIcons</code> class (committed).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="gotchas">Gotchas</h2>
+<ul>
+<li><strong>Empty or wrong-looking glyph?</strong> The SVG was probably multi-color or had an
+  embedded image. Make it a single-color vector and rebuild.</li>
+<li><strong><code>import.sh</code> says "PICOSVG FAILED"</strong> for a file → that SVG has something
+  picosvg can't resolve (e.g. multi-color, raster). Simplify/flatten it in the
+  design tool and re-export.</li>
+<li><strong>Name collisions:</strong> two files can't share a name. Filenames are unique by
+  definition, so just pick distinct, descriptive names.</li>
+<li>Always commit the regenerated <code>fonts/PaxmeetIcons.ttf</code> and
+  <code>lib/paxmeet_icons.dart</code> together with the SVG change.</li>
+</ul></section>
+</body></html>

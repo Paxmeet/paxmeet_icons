@@ -1,0 +1,12 @@
+# Dart/Flutter
+.dart_tool/
+.packages
+build/
+# a library should not pin its lockfile
+pubspec.lock
+
+# picosvg normalizer venv (recreate with: python3 -m venv tool/.venv && tool/.venv/bin/pip install picosvg)
+tool/.venv/
+
+# OS
+.DS_Store

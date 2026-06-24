@@ -1,0 +1,23 @@
+name: paxmeet_icons
+description: Paxmeet's custom icon set, shipped as a single icon font (like font_awesome_flutter).
+version: 0.0.1
+publish_to: none # remove this line later if/when you publish to pub.dev
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  icon_font_generator: ^4.0.0
+
+# The font file below is generated from tool/svgs/ by:
+#   dart run tool/generate.sh   (see README)
+flutter:
+  fonts:
+    - family: PaxmeetIcons
+      fonts:
+        - asset: fonts/PaxmeetIcons.ttf
