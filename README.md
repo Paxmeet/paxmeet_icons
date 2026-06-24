@@ -12,6 +12,7 @@ with `tool/.venv/bin/python tool/preview.py` after adding icons.
 
 - **[docs/INSTALL.md](docs/INSTALL.md)** — add this library to a Flutter project and use icons.
 - **[docs/ADDING_ICONS.md](docs/ADDING_ICONS.md)** — add, rename, or remove icons.
+- **[web/README.md](web/README.md)** — use the same icons on the web (Next.js / React).
 
 - **One `.ttf`** holds every icon (not hundreds of asset files).
 - Icons are `const IconData`, so Flutter **tree-shakes unused glyphs** in release
