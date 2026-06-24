@@ -24,15 +24,18 @@ are **identical** to Flutter, so the team uses one convention everywhere:
 
 1. **Copy** this folder into the site, e.g. `src/components/paxmeet-icons/`.
 
-2. **Import the CSS once.** Either in `src/app/globals.css`:
-   ```css
-   @import "../components/paxmeet-icons/paxmeet-icons.css";
-   ```
-   …or in `src/app/layout.js`:
+2. **Import the CSS once** — in `src/app/layout.js`, as a JS import:
    ```js
+   import "./globals.css";
    import "@/components/paxmeet-icons/paxmeet-icons.css";
    ```
-   (`PaxmeetIcon.jsx` also imports the CSS itself, so importing the component is enough.)
+   (`PaxmeetIcon.jsx` also imports the CSS itself, so importing the component anywhere is enough.)
+
+   > ⚠️ Do **not** add `@import "...paxmeet-icons.css"` inside `globals.css` if that
+   > file already has other `@import` rules (e.g. Google Fonts). The bundler inlines
+   > the icon rules in place, pushing the other `@import` below them, and CSS
+   > requires every `@import` to come first — Next.js will throw
+   > *"@import rules must precede all rules"*. The JS import above avoids this.
 
 3. **Use it** in any component:
    ```jsx
