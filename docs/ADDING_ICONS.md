@@ -1,31 +1,29 @@
-# Adding / updating / removing icons
+# Adding / updating / removing icons (updates app + web together)
 
-The package turns a folder of SVGs into one icon font. The **single source of
-truth** is the [`alliconsvg/`](../alliconsvg/) folder — a flat folder where the
-**filename is the icon name**. You edit that folder, run the build, and the font,
-the Dart class, and the reference webpage all regenerate.
+You edit **one** folder of SVGs and run **one** command. That regenerates the
+font, the Flutter class, **and** the web assets — so the app and website always
+get the same icons. The single source of truth is
+[`alliconsvg/`](../alliconsvg/) — a flat folder where **the filename is the icon
+name**.
 
 ```
-alliconsvg/home.svg   ─┐
-alliconsvg/heart.svg   ├─ build ─▶  fonts/PaxmeetIcons.ttf
-alliconsvg/search.svg ─┘            lib/paxmeet_icons.dart  →  PaxmeetIcons.home …
-                                    index.html (reference page)
+alliconsvg/home.svg        ─┐                    ┌─▶ lib/paxmeet_icons.dart   (Flutter: PaxmeetIcons.home)
+alliconsvg/heart.svg        ├─ tool/build.sh ─▶ ├─▶ web/paxmeet-icons.css     (Web: <PaxmeetIcon name="home"/>)
+alliconsvg/search.svg      ─┘   (one font)        └─▶ index.html, preview.png  (reference)
 ```
 
 ---
 
 ## One-time setup (first time on a machine)
 
-The build uses **picosvg** (converts strokes→fills) and **icon_font_generator**.
-
 ```bash
 cd paxmeet_icons
 
-# 1. picosvg (Python) — for stroke/shape normalization
+# Python tools: picosvg (stroke→fill normalization) + markdown (for the PDF)
 python3 -m venv tool/.venv
-tool/.venv/bin/pip install picosvg
+tool/.venv/bin/pip install picosvg markdown
 
-# 2. icon_font_generator (Dart) — builds the font
+# Dart tool: the font generator
 dart pub global activate icon_font_generator
 ```
 
@@ -33,81 +31,73 @@ dart pub global activate icon_font_generator
 
 ## Add a new icon
 
-1. **Prepare the SVG.** It must be:
-   - **Single color** (monochrome). The color is applied later in Flutter via
-     `Icon(color:)`. Multi-color/brand icons cannot be a font glyph.
-   - Either fill-based **or** stroke-based — both are fine, picosvg converts
-     strokes to filled outlines automatically.
-   - Recommended canvas: `24×24` viewBox, no embedded raster images.
+1. **Prepare the SVG**
+   - **Single color** (monochrome) — the color is applied later (`Icon(color:)`
+     in Flutter, `color` in CSS). Multi-color/brand icons can't be a font glyph.
+   - Fill-based **or** stroke-based both work — strokes are auto-converted to
+     filled outlines by picosvg.
+   - Recommended: `24×24` viewBox, no embedded raster images.
 
-2. **Name it well** and drop it in `alliconsvg/`:
-   - Use **snake_case**; the filename becomes a **camelCase** Dart identifier.
-     - `add_circle.svg`   → `PaxmeetIcons.addCircle`
-     - `event_ticket.svg` → `PaxmeetIcons.eventTicket`
-   - Name by **what the icon depicts** or its **UI meaning**, not the design-tool
-     export name: `wallet` not `empty_wallet`, `message` not `message_text`,
-     `microphone` not `microphone_2`.
+2. **Name it well** and drop it into `alliconsvg/`
+   - Use **snake_case**; it becomes a **camelCase** name on both platforms:
+     - `event_ticket.svg` → Flutter `PaxmeetIcons.eventTicket` / Web `name="eventTicket"`
+   - Name by **what the icon depicts** or its UI meaning — `wallet` not
+     `empty_wallet`, `message` not `message_text`, `microphone` not `microphone_2`.
 
-3. **Build:**
+3. **Build everything (one command)**
    ```bash
-   bash tool/import.sh        # normalize alliconsvg/ -> tool/svgs/ (picosvg)
-   bash tool/generate.sh      # build the .ttf + lib/paxmeet_icons.dart
-   tool/.venv/bin/python tool/build_web.py   # refresh index.html reference page
+   bash tool/build.sh
+   ```
+   This updates the font, Flutter class, web CSS/component, and the reference page.
+
+4. **Commit & push** so apps and sites can pull it
+   ```bash
+   git add -A && git commit -m "icons: add eventTicket" && git push
    ```
 
-4. **Use it:** `Icon(PaxmeetIcons.eventTicket)`. In an app already depending on
-   the package, run `flutter pub get` + full restart to pick up the new font.
-
-> Tip: there's no need to remember the three commands separately — they always
-> run together. See **One-command build** below.
+5. **Pick it up in each project**
+   - **Flutter app:** `flutter pub get` (or `fvm flutter pub get`) + full restart.
+   - **Website:** re-copy `web/*` into the site
+     (`cp paxmeet_icons/web/* <site>/src/components/paxmeet-icons/`).
 
 ---
 
 ## Rename an icon
-
 1. Rename the file in `alliconsvg/` (e.g. `empty_wallet.svg` → `wallet.svg`).
-2. Re-run the build (`import.sh` clears stale files, so the old name disappears).
-3. Update any usages in apps from `PaxmeetIcons.emptyWallet` → `PaxmeetIcons.wallet`.
+2. `bash tool/build.sh` (the build clears stale names automatically).
+3. Update usages: Flutter `PaxmeetIcons.emptyWallet` → `PaxmeetIcons.wallet`;
+   Web `name="emptyWallet"` → `name="wallet"`.
+4. Commit, push, update each project.
 
 ## Remove an icon
-
 1. Delete the file from `alliconsvg/`.
-2. Re-run the build. The glyph and its constant are gone.
+2. `bash tool/build.sh`, commit, push.
 
 ---
 
-## One-command build (optional convenience)
+## What each file/script is
 
-Run all three steps at once:
-
-```bash
-bash tool/import.sh && bash tool/generate.sh && tool/.venv/bin/python tool/build_web.py
-```
-
----
-
-## How it works (reference)
-
-| Folder / file | Role |
+| File / folder | Role |
 |---|---|
 | `alliconsvg/` | **Source of truth** — flat, clean-named SVGs you edit. |
-| `tool/import.sh` | Normalizes each SVG with picosvg into `tool/svgs/` (clears old files first). |
-| `tool/svgs/` | Generated, normalized SVGs — the actual font input. Don't hand-edit. |
-| `tool/generate.sh` | Runs `icon_font_generator`: `tool/svgs/` → `.ttf` + Dart class. |
-| `tool/build_web.py` | Builds the self-contained `index.html` reference page. |
-| `fonts/PaxmeetIcons.ttf` | The generated font (committed). |
-| `lib/paxmeet_icons.dart` | The generated `PaxmeetIcons` class (committed). |
+| `tool/build.sh` | **The one command** — runs the whole pipeline below. |
+| `tool/import.sh` | Normalizes SVGs with picosvg → `tool/svgs/` (clears old files). |
+| `tool/generate.sh` | `icon_font_generator`: `tool/svgs/` → `.ttf` + `lib/paxmeet_icons.dart`. |
+| `tool/build_web_assets.py` | Generates `web/` CSS + React component from the font. |
+| `tool/build_web.py` | Generates the `index.html` reference page. |
+| `tool/preview.py` | Generates `preview.png`. |
+| `fonts/PaxmeetIcons.ttf` | The generated font — used by **both** app and web (committed). |
+| `lib/paxmeet_icons.dart`, `web/*` | Generated outputs (committed). |
 
 ---
 
 ## Gotchas
 
-- **Empty or wrong-looking glyph?** The SVG was probably multi-color or had an
-  embedded image. Make it a single-color vector and rebuild.
-- **`import.sh` says "PICOSVG FAILED"** for a file → that SVG has something
-  picosvg can't resolve (e.g. multi-color, raster). Simplify/flatten it in the
-  design tool and re-export.
-- **Name collisions:** two files can't share a name. Filenames are unique by
-  definition, so just pick distinct, descriptive names.
-- Always commit the regenerated `fonts/PaxmeetIcons.ttf` and
-  `lib/paxmeet_icons.dart` together with the SVG change.
+- **Empty / wrong glyph** → the SVG was multi-color or had an embedded image.
+  Flatten it to a single-color vector and rebuild.
+- **`import.sh` prints "PICOSVG FAILED"** for a file → picosvg can't resolve it
+  (multi-color/raster). Simplify and re-export.
+- Always commit the regenerated `fonts/`, `lib/paxmeet_icons.dart`, and `web/`
+  together with the SVG change, so app and web stay in sync.
+- After updating, **restart** the Flutter app fully (not just hot reload) and
+  re-copy `web/*` into the website.

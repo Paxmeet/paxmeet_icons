@@ -8,7 +8,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 
 PARTS = [
-    ("Adding paxmeet_icons to a Flutter project", DOCS / "INSTALL.md"),
+    ("Using paxmeet_icons (Flutter app + Web)", DOCS / "USAGE.md"),
     ("Adding / updating / removing icons", DOCS / "ADDING_ICONS.md"),
 ]
 
