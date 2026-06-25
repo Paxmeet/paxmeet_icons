@@ -17,6 +17,12 @@ b64 = base64.b64encode(ttf).decode()
 items = re.findall(r'static const IconData (\w+) = IconData\(0x([0-9a-fA-F]+)', dart)
 items = sorted(((n, int(h, 16)) for n, h in items), key=lambda x: x[0])
 
+# multiline Flutter dependency snippet (real newlines so copy pastes correctly)
+PUBSPEC_DEP = ("paxmeet_icons:\n"
+               "    git:\n"
+               "      url: https://github.com/letssuhail/paxmeet_icons.git\n"
+               "      ref: main")
+
 cells = "\n".join(
     f'''      <button class="cell" data-name="{n}" data-cp="{cp:x}">
         <span class="ico">&#x{cp:x};</span>
@@ -44,8 +50,13 @@ html = f'''<!DOCTYPE html>
          background:var(--bg); color:var(--txt); }}
   header {{ position:sticky; top:0; background:rgba(15,16,20,.9); backdrop-filter:blur(8px);
             padding:20px 24px 14px; border-bottom:1px solid var(--line); z-index:5; }}
+  .htop {{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }}
   h1 {{ margin:0 0 4px; font-size:20px; }}
   h1 span {{ color:var(--accent); }}
+  .docbtn {{ display:inline-flex; align-items:center; gap:7px; background:var(--accent); color:#fff;
+             border:none; border-radius:10px; padding:9px 16px; font-size:13px; font-weight:600;
+             cursor:pointer; white-space:nowrap; }}
+  .docbtn:hover {{ filter:brightness(1.1); }}
   .sub {{ color:var(--sub); font-size:13px; margin-bottom:12px; }}
   #q {{ width:100%; max-width:420px; padding:10px 14px; border-radius:10px; border:1px solid var(--line);
         background:var(--card); color:var(--txt); font-size:14px; outline:none; }}
@@ -86,6 +97,20 @@ html = f'''<!DOCTYPE html>
   .snip .cp:hover {{ filter:brightness(1.1); }}
   .snip .cp.ok {{ background:#22c55e; }}
 
+  /* install modal */
+  .modal.wide {{ width:min(680px,100%); max-height:88vh; overflow-y:auto; }}
+  .isec {{ margin-bottom:22px; }}
+  .isec h3 {{ font-size:15px; margin:0 0 10px; display:flex; align-items:center; gap:8px; }}
+  .isec h3 .tag {{ font-size:11px; font-weight:600; color:var(--accent); background:rgba(124,77,255,.15);
+                   padding:3px 9px; border-radius:99px; }}
+  .istep {{ display:flex; gap:10px; margin-bottom:10px; }}
+  .istep .num {{ flex:0 0 22px; height:22px; border-radius:50%; background:var(--bg); border:1px solid var(--line);
+                 color:var(--sub); font-size:12px; display:flex; align-items:center; justify-content:center; margin-top:2px; }}
+  .istep .body {{ flex:1; min-width:0; }}
+  .istep .body p {{ margin:2px 0 6px; font-size:13px; color:var(--txt); }}
+  .istep .body .muted {{ color:var(--sub); }}
+  code.multi {{ white-space:pre !important; line-height:1.5; }}
+
   .toast {{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
             background:var(--accent); color:#fff; padding:10px 18px; border-radius:10px; font-size:13px;
             opacity:0; transition:.2s; pointer-events:none; z-index:30; }}
@@ -94,14 +119,70 @@ html = f'''<!DOCTYPE html>
 </head>
 <body>
   <header>
-    <h1>paxmeet<span>_icons</span></h1>
-    <div class="sub">{len(items)} icons · click any to see Flutter &amp; web code · type to filter</div>
+    <div class="htop">
+      <div>
+        <h1>paxmeet<span>_icons</span></h1>
+        <div class="sub">{len(items)} icons · click any to see Flutter &amp; web code · type to filter</div>
+      </div>
+      <button class="docbtn" id="docbtn">📖 Install</button>
+    </div>
     <input id="q" placeholder="Search icons…" autocomplete="off">
   </header>
   <div class="grid" id="grid">
 {cells}
   </div>
   <div class="empty" id="empty" hidden>No icons match.</div>
+
+  <div class="backdrop" id="installBackdrop" hidden>
+    <div class="modal wide" role="dialog" aria-modal="true">
+      <div class="mhead">
+        <span class="mname">Install paxmeet_icons</span>
+        <button class="mclose" id="iclose" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="isec">
+        <h3>📱 Flutter app <span class="tag">3 steps</span></h3>
+        <div class="istep"><div class="num">1</div><div class="body">
+          <p class="muted">Add to <b>pubspec.yaml</b> under <code style="padding:1px 5px">dependencies:</code></p>
+          <div class="snip"><div class="row">
+            <code id="iF1" class="multi">{PUBSPEC_DEP}</code>
+            <button class="cp" data-for="iF1">Copy</button></div></div>
+        </div></div>
+        <div class="istep"><div class="num">2</div><div class="body">
+          <p class="muted">Install</p>
+          <div class="snip"><div class="row"><code id="iF2">flutter pub get</code><button class="cp" data-for="iF2">Copy</button></div></div>
+        </div></div>
+        <div class="istep"><div class="num">3</div><div class="body">
+          <p class="muted">Use anywhere</p>
+          <div class="snip"><div class="row"><code id="iF3">Icon(PaxmeetIcons.home)</code><button class="cp" data-for="iF3">Copy</button></div></div>
+        </div></div>
+      </div>
+
+      <div class="isec">
+        <h3>🌐 Website (Next.js / React) <span class="tag">3 steps</span></h3>
+        <div class="istep"><div class="num">1</div><div class="body">
+          <p class="muted">Copy the package's <b>web/</b> files into your site</p>
+          <div class="snip"><div class="row">
+            <code id="iW1">cp -r paxmeet_icons/web/* src/components/paxmeet-icons/</code>
+            <button class="cp" data-for="iW1">Copy</button></div></div>
+        </div></div>
+        <div class="istep"><div class="num">2</div><div class="body">
+          <p class="muted">Import the CSS once in <b>app/layout.js</b></p>
+          <div class="snip"><div class="row">
+            <code id="iW2">import "@/components/paxmeet-icons/paxmeet-icons.css";</code>
+            <button class="cp" data-for="iW2">Copy</button></div></div>
+        </div></div>
+        <div class="istep"><div class="num">3</div><div class="body">
+          <p class="muted">Use anywhere</p>
+          <div class="snip"><div class="row">
+            <code id="iW3">&lt;PaxmeetIcon name="home" /&gt;</code>
+            <button class="cp" data-for="iW3">Copy</button></div></div>
+        </div></div>
+      </div>
+
+      <p class="sub" style="margin:0">Same icon names on both platforms — click any icon for its exact code.</p>
+    </div>
+  </div>
 
   <div class="backdrop" id="backdrop" hidden>
     <div class="modal" role="dialog" aria-modal="true">
@@ -159,7 +240,20 @@ html = f'''<!DOCTYPE html>
   cells.forEach(c => c.addEventListener('click', () => openModal(c.dataset.name, c.dataset.cp)));
   document.getElementById('mclose').addEventListener('click', closeModal);
   backdrop.addEventListener('click', e => {{ if (e.target === backdrop) closeModal(); }});
-  document.addEventListener('keydown', e => {{ if (e.key === 'Escape' && !backdrop.hidden) closeModal(); }});
+
+  // install / docs modal
+  const installBackdrop = document.getElementById('installBackdrop');
+  function openInstall() {{ installBackdrop.hidden = false; requestAnimationFrame(() => installBackdrop.classList.add('show')); }}
+  function closeInstall() {{ installBackdrop.classList.remove('show'); setTimeout(() => {{ installBackdrop.hidden = true; }}, 150); }}
+  document.getElementById('docbtn').addEventListener('click', openInstall);
+  document.getElementById('iclose').addEventListener('click', closeInstall);
+  installBackdrop.addEventListener('click', e => {{ if (e.target === installBackdrop) closeInstall(); }});
+
+  document.addEventListener('keydown', e => {{
+    if (e.key !== 'Escape') return;
+    if (!backdrop.hidden) closeModal();
+    if (!installBackdrop.hidden) closeInstall();
+  }});
 
   document.querySelectorAll('.cp').forEach(btn => btn.addEventListener('click', async () => {{
     const text = document.getElementById(btn.dataset.for).textContent;
