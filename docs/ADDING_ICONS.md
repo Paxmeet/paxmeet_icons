@@ -3,13 +3,13 @@
 You edit **one** folder of SVGs and run **one** command. That regenerates the
 font, the Flutter class, **and** the web assets — so the app and website always
 get the same icons. The single source of truth is
-[`alliconsvg/`](../alliconsvg/) — a flat folder where **the filename is the icon
+[`iconsvgs/`](../iconsvgs/) — a flat folder where **the filename is the icon
 name**.
 
 ```
-alliconsvg/home.svg        ─┐                    ┌─▶ lib/paxmeet_icons.dart   (Flutter: PaxmeetIcons.home)
-alliconsvg/heart.svg        ├─ tool/build.sh ─▶ ├─▶ web/paxmeet-icons.css     (Web: <PaxmeetIcon name="home"/>)
-alliconsvg/search.svg      ─┘   (one font)        └─▶ index.html, preview.png  (reference)
+iconsvgs/home.svg        ─┐                    ┌─▶ lib/paxmeet_icons.dart   (Flutter: PaxmeetIcons.home)
+iconsvgs/heart.svg        ├─ tool/build.sh ─▶ ├─▶ web/paxmeet-icons.css     (Web: <PaxmeetIcon name="home"/>)
+iconsvgs/search.svg      ─┘   (one font)        └─▶ index.html, preview.png  (reference)
 ```
 
 ---
@@ -38,7 +38,7 @@ dart pub global activate icon_font_generator
      filled outlines by picosvg.
    - Recommended: `24×24` viewBox, no embedded raster images.
 
-2. **Name it well** and drop it into `alliconsvg/`
+2. **Name it well** and drop it into `iconsvgs/`
    - Use **snake_case**; it becomes a **camelCase** name on both platforms:
      - `event_ticket.svg` → Flutter `PaxmeetIcons.eventTicket` / Web `name="eventTicket"`
    - Name by **what the icon depicts** or its UI meaning — `wallet` not
@@ -63,14 +63,14 @@ dart pub global activate icon_font_generator
 ---
 
 ## Rename an icon
-1. Rename the file in `alliconsvg/` (e.g. `empty_wallet.svg` → `wallet.svg`).
+1. Rename the file in `iconsvgs/` (e.g. `empty_wallet.svg` → `wallet.svg`).
 2. `bash tool/build.sh` (the build clears stale names automatically).
 3. Update usages: Flutter `PaxmeetIcons.emptyWallet` → `PaxmeetIcons.wallet`;
    Web `name="emptyWallet"` → `name="wallet"`.
 4. Commit, push, update each project.
 
 ## Remove an icon
-1. Delete the file from `alliconsvg/`.
+1. Delete the file from `iconsvgs/`.
 2. `bash tool/build.sh`, commit, push.
 
 ---
@@ -79,7 +79,7 @@ dart pub global activate icon_font_generator
 
 | File / folder | Role |
 |---|---|
-| `alliconsvg/` | **Source of truth** — flat, clean-named SVGs you edit. |
+| `iconsvgs/` | **Source of truth** — flat, clean-named SVGs you edit. |
 | `tool/build.sh` | **The one command** — runs the whole pipeline below. |
 | `tool/import.sh` | Normalizes SVGs with picosvg → `tool/svgs/` (clears old files). |
 | `tool/generate.sh` | `icon_font_generator`: `tool/svgs/` → `.ttf` + `lib/paxmeet_icons.dart`. |

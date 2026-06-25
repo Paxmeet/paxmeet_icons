@@ -40,12 +40,12 @@ with `tool/.venv/bin/python tool/preview.py` after adding icons.
 
 ### Source SVGs
 
-`alliconsvg/` holds the raw source set as a **flat folder** of clean
+`iconsvgs/` holds the raw source set as a **flat folder** of clean
 snake_case-named SVGs (filename = icon name). Drop a new single-color SVG in,
 then run:
 
 ```bash
-bash tool/import.sh    # picosvg-normalize alliconsvg/ -> tool/svgs/
+bash tool/import.sh    # picosvg-normalize iconsvgs/ -> tool/svgs/
 bash tool/generate.sh  # build font + Dart class
 ```
 

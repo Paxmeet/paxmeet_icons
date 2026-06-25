@@ -136,11 +136,11 @@ CSS requires all <code>@import</code>s first, and Next.js will error.</p>
 <p>You edit <strong>one</strong> folder of SVGs and run <strong>one</strong> command. That regenerates the
 font, the Flutter class, <strong>and</strong> the web assets — so the app and website always
 get the same icons. The single source of truth is
-<a href="../alliconsvg/"><code>alliconsvg/</code></a> — a flat folder where <strong>the filename is the icon
+<a href="../iconsvgs/"><code>iconsvgs/</code></a> — a flat folder where <strong>the filename is the icon
 name</strong>.</p>
-<pre><code>alliconsvg/home.svg        ─┐                    ┌─▶ lib/paxmeet_icons.dart   (Flutter: PaxmeetIcons.home)
-alliconsvg/heart.svg        ├─ tool/build.sh ─▶ ├─▶ web/paxmeet-icons.css     (Web: &lt;PaxmeetIcon name=&quot;home&quot;/&gt;)
-alliconsvg/search.svg      ─┘   (one font)        └─▶ index.html, preview.png  (reference)
+<pre><code>iconsvgs/home.svg        ─┐                    ┌─▶ lib/paxmeet_icons.dart   (Flutter: PaxmeetIcons.home)
+iconsvgs/heart.svg        ├─ tool/build.sh ─▶ ├─▶ web/paxmeet-icons.css     (Web: &lt;PaxmeetIcon name=&quot;home&quot;/&gt;)
+iconsvgs/search.svg      ─┘   (one font)        └─▶ index.html, preview.png  (reference)
 </code></pre>
 <hr />
 <h2 id="one-time-setup-first-time-on-a-machine">One-time setup (first time on a machine)</h2>
@@ -165,7 +165,7 @@ dart pub global activate icon_font_generator
 <p>Recommended: <code>24×24</code> viewBox, no embedded raster images.</p>
 </li>
 <li>
-<p><strong>Name it well</strong> and drop it into <code>alliconsvg/</code></p>
+<p><strong>Name it well</strong> and drop it into <code>iconsvgs/</code></p>
 </li>
 <li>Use <strong>snake_case</strong>; it becomes a <strong>camelCase</strong> name on both platforms:<ul>
 <li><code>event_ticket.svg</code> → Flutter <code>PaxmeetIcons.eventTicket</code> / Web <code>name="eventTicket"</code></li>
@@ -196,7 +196,7 @@ dart pub global activate icon_font_generator
 <hr />
 <h2 id="rename-an-icon">Rename an icon</h2>
 <ol>
-<li>Rename the file in <code>alliconsvg/</code> (e.g. <code>empty_wallet.svg</code> → <code>wallet.svg</code>).</li>
+<li>Rename the file in <code>iconsvgs/</code> (e.g. <code>empty_wallet.svg</code> → <code>wallet.svg</code>).</li>
 <li><code>bash tool/build.sh</code> (the build clears stale names automatically).</li>
 <li>Update usages: Flutter <code>PaxmeetIcons.emptyWallet</code> → <code>PaxmeetIcons.wallet</code>;
    Web <code>name="emptyWallet"</code> → <code>name="wallet"</code>.</li>
@@ -204,7 +204,7 @@ dart pub global activate icon_font_generator
 </ol>
 <h2 id="remove-an-icon">Remove an icon</h2>
 <ol>
-<li>Delete the file from <code>alliconsvg/</code>.</li>
+<li>Delete the file from <code>iconsvgs/</code>.</li>
 <li><code>bash tool/build.sh</code>, commit, push.</li>
 </ol>
 <hr />
@@ -218,7 +218,7 @@ dart pub global activate icon_font_generator
 </thead>
 <tbody>
 <tr>
-<td><code>alliconsvg/</code></td>
+<td><code>iconsvgs/</code></td>
 <td><strong>Source of truth</strong> — flat, clean-named SVGs you edit.</td>
 </tr>
 <tr>

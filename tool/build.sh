@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build EVERYTHING from the SVGs in alliconsvg/ — runs the full pipeline so the
+# Build EVERYTHING from the SVGs in iconsvgs/ — runs the full pipeline so the
 # Flutter app, the website assets, and the reference page all stay in sync.
 #
 # Usage:  bash tool/build.sh   (run from the package root)
