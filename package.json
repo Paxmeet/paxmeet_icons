@@ -1,0 +1,22 @@
+{
+  "name": "paxmeet_icons",
+  "version": "0.0.1",
+  "description": "Paxmeet custom icon set for the web (React / Next.js) — same icons as the Flutter package.",
+  "type": "module",
+  "exports": {
+    ".": "./web/PaxmeetIcon.jsx",
+    "./css": "./web/paxmeet-icons.css",
+    "./names": "./web/icon-names.js"
+  },
+  "files": [
+    "web",
+    "fonts",
+    "index.html",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "react": ">=17"
+  },
+  "private": true,
+  "license": "UNLICENSED"
+}
