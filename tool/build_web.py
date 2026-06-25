@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate a self-contained icon-reference webpage (index.html) from the
 generated font + Dart class. Font is embedded as base64 so the page is a single
-file that works anywhere — open it directly or host it on GitHub Pages.
+file that works anywhere - open it directly or host it on GitHub Pages.
 
 Click an icon → modal with Flutter + React + HTML code, each with a copy button.
 Run:  tool/.venv/bin/python tool/build_web.py
@@ -36,7 +36,7 @@ html = f'''<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>paxmeet_icons — {len(items)} icons</title>
+<title>paxmeet_icons - {len(items)} icons</title>
 <style>
   @font-face {{
     font-family: "PaxmeetIcons";
@@ -100,11 +100,9 @@ html = f'''<!DOCTYPE html>
   /* install modal */
   .modal.wide {{ width:min(680px,100%); max-height:88vh; overflow-y:auto; }}
   .isec {{ margin-bottom:22px; }}
-  .isec h3 {{ font-size:15px; margin:0 0 10px; display:flex; align-items:center; gap:8px; }}
-  .isec h3 .tag {{ font-size:11px; font-weight:600; color:var(--accent); background:rgba(124,77,255,.15);
-                   padding:3px 9px; border-radius:99px; }}
+  .isec h3 {{ font-size:15px; margin:0 0 10px; }}
   .istep {{ display:flex; gap:10px; margin-bottom:10px; }}
-  .istep .num {{ flex:0 0 22px; height:22px; border-radius:50%; background:var(--bg); border:1px solid var(--line);
+  .istep .num {{ flex:0 0 22px; height:22px; border-radius:50%; background:transparent; border:1px solid var(--line);
                  color:var(--sub); font-size:12px; display:flex; align-items:center; justify-content:center; margin-top:2px; }}
   .istep .body {{ flex:1; min-width:0; }}
   .istep .body p {{ margin:2px 0 6px; font-size:13px; color:var(--txt); }}
@@ -124,7 +122,7 @@ html = f'''<!DOCTYPE html>
         <h1>paxmeet<span>_icons</span></h1>
         <div class="sub">{len(items)} icons · click any to see Flutter &amp; web code · type to filter</div>
       </div>
-      <button class="docbtn" id="docbtn">📖 Install</button>
+      <button class="docbtn" id="docbtn">Install</button>
     </div>
     <input id="q" placeholder="Search icons…" autocomplete="off">
   </header>
@@ -141,7 +139,7 @@ html = f'''<!DOCTYPE html>
       </div>
 
       <div class="isec">
-        <h3>📱 Flutter app <span class="tag">3 steps</span></h3>
+        <h3>Flutter app</h3>
         <div class="istep"><div class="num">1</div><div class="body">
           <p class="muted">Add to <b>pubspec.yaml</b> under <code style="padding:1px 5px">dependencies:</code></p>
           <div class="snip"><div class="row">
@@ -159,7 +157,7 @@ html = f'''<!DOCTYPE html>
       </div>
 
       <div class="isec">
-        <h3>🌐 Website (Next.js / React) <span class="tag">3 steps</span></h3>
+        <h3>Website (Next.js / React)</h3>
         <div class="istep"><div class="num">1</div><div class="body">
           <p class="muted">Copy the package's <b>web/</b> files into your site</p>
           <div class="snip"><div class="row">
@@ -180,7 +178,7 @@ html = f'''<!DOCTYPE html>
         </div></div>
       </div>
 
-      <p class="sub" style="margin:0">Same icon names on both platforms — click any icon for its exact code.</p>
+      <p class="sub" style="margin:0">Same icon names on both platforms - click any icon for its exact code.</p>
     </div>
   </div>
 
