@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""Combine the docs into a single styled HTML (docs/paxmeet_icons_docs.html)
-ready to print to PDF. Run build_pdf.sh to also produce the PDF via Chrome.
-"""
 import pathlib, markdown
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -17,7 +14,7 @@ md = markdown.Markdown(extensions=["tables", "fenced_code", "toc"])
 sections = []
 for i, (_, path) in enumerate(PARTS):
     text = path.read_text()
-    # drop the first H1 (we render our own title) — keep it simple
+    # drop the first H1 (we render our own title) - keep it simple
     html = md.convert(text)
     md.reset()
     page_break = ' style="page-break-before: always;"' if i > 0 else ""
@@ -27,7 +24,7 @@ body = "\n".join(sections)
 
 doc = f'''<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
-<title>paxmeet_icons — Documentation</title>
+<title>paxmeet_icons - Documentation</title>
 <style>
   @page {{ size: A4; margin: 18mm 16mm; }}
   * {{ box-sizing: border-box; }}
@@ -56,7 +53,7 @@ doc = f'''<!DOCTYPE html>
 <body>
   <div class="cover">
     <h1>paxmeet<span>_icons</span></h1>
-    <p>Custom icon-font package — Documentation</p>
+    <p>Custom icon-font package - Documentation</p>
     <p style="font-size:11px;">Install &amp; usage · Adding / renaming / removing icons</p>
   </div>
   {body}

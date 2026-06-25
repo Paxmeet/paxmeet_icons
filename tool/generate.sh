@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
-# Regenerate the PaxmeetIcons font + Dart class from tool/svgs/*.svg
-# Usage:  bash tool/generate.sh   (run from the package root)
 set -euo pipefail
 
-# Normalize every SVG in tool/svgs/ with picosvg (strokes->fills, shapes->paths,
-# clip-paths resolved) so glyphs render correctly. Idempotent — safe to re-run.
 PICO="$(cd "$(dirname "$0")/.." && pwd)/tool/.venv/bin/picosvg"
 if [ -x "$PICO" ]; then
   for svg in tool/svgs/*.svg; do

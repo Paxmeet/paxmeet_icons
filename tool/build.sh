@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# Build EVERYTHING from the SVGs in iconsvgs/ — runs the full pipeline so the
-# Flutter app, the website assets, and the reference page all stay in sync.
-#
-# Usage:  bash tool/build.sh   (run from the package root)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -24,7 +20,7 @@ echo "▶ 4/4  Building reference page + preview …"
 
 echo ""
 echo "✓ Done. Updated:"
-echo "    fonts/PaxmeetIcons.ttf        (the font — used by app AND web)"
+echo "    fonts/PaxmeetIcons.ttf        (the font - used by app AND web)"
 echo "    lib/paxmeet_icons.dart        (Flutter:  PaxmeetIcons.xxx)"
 echo "    web/paxmeet-icons.css + .jsx  (Web:      <PaxmeetIcon name=\"xxx\"/>)"
 echo "    index.html, preview.png       (reference)"

@@ -1,4 +1,4 @@
-// paxmeet-icons React component — generated.
+// paxmeet-icons React component - generated.
 // Usage:  import { PaxmeetIcon } from "@/components/paxmeet-icons/PaxmeetIcon";
 //         <PaxmeetIcon name="home" size={24} color="#7332D6" />
 import "./paxmeet-icons.css";

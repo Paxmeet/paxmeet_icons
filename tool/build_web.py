@@ -1,11 +1,4 @@
 #!/usr/bin/env python3
-"""Generate a self-contained icon-reference webpage (index.html) from the
-generated font + Dart class. Font is embedded as base64 so the page is a single
-file that works anywhere - open it directly or host it on GitHub Pages.
-
-Click an icon → modal with Flutter + React + HTML code, each with a copy button.
-Run:  tool/.venv/bin/python tool/build_web.py
-"""
 import re, base64, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent

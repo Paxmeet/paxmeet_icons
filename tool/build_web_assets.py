@@ -1,13 +1,4 @@
 #!/usr/bin/env python3
-"""Generate web assets (CSS + React component) from the same font, so a
-website (e.g. Next.js) uses the identical icons as the Flutter app.
-
-Outputs into web/:
-  - paxmeet-icons.css   self-contained: @font-face (base64 ttf) + .pmi-<name> classes
-  - PaxmeetIcon.jsx     React component  <PaxmeetIcon name="home" />
-  - icon-names.js       array of all icon names (for autocomplete/validation)
-Run:  tool/.venv/bin/python tool/build_web_assets.py
-"""
 import re, base64, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -24,7 +15,7 @@ rows = sorted(((n, n, int(h, 16)) for n, h in items), key=lambda x: x[1])
 
 # ---- CSS ----
 classes = "\n".join(f'.pmi-{k}::before {{ content: "\\{cp:x}"; }}' for _, k, cp in rows)
-css = f'''/* paxmeet-icons — generated. Do not edit by hand. */
+css = f'''/* paxmeet-icons - generated. Do not edit by hand. */
 @font-face {{
   font-family: "PaxmeetIcons";
   src: url("data:font/ttf;base64,{b64}") format("truetype");
@@ -41,7 +32,7 @@ css = f'''/* paxmeet-icons — generated. Do not edit by hand. */
 (WEB / "paxmeet-icons.css").write_text(css)
 
 # ---- React component (JSX) ----
-jsx = '''// paxmeet-icons React component — generated.
+jsx = '''// paxmeet-icons React component - generated.
 // Usage:  import { PaxmeetIcon } from "@/components/paxmeet-icons/PaxmeetIcon";
 //         <PaxmeetIcon name="home" size={24} color="#7332D6" />
 import "./paxmeet-icons.css";
