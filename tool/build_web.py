@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Generate a self-contained icon-reference webpage (index.html) from the
-generated font + Dart class. Font is embedded as base64 so the page works
-anywhere (open the file directly, or host it on GitHub Pages).
+generated font + Dart class. Font is embedded as base64 so the page is a single
+file that works anywhere — open it directly or host it on GitHub Pages.
+
+Click an icon → modal with Flutter + React + HTML code, each with a copy button.
 Run:  tool/.venv/bin/python tool/build_web.py
 """
 import re, base64, pathlib
@@ -16,7 +18,7 @@ items = re.findall(r'static const IconData (\w+) = IconData\(0x([0-9a-fA-F]+)', 
 items = sorted(((n, int(h, 16)) for n, h in items), key=lambda x: x[0])
 
 cells = "\n".join(
-    f'''      <button class="cell" data-name="{n}" data-code="PaxmeetIcons.{n}">
+    f'''      <button class="cell" data-name="{n}" data-cp="{cp:x}">
         <span class="ico">&#x{cp:x};</span>
         <span class="name">{n}</span>
       </button>'''
@@ -55,43 +57,116 @@ html = f'''<!DOCTYPE html>
   .cell:hover {{ border-color:var(--accent); transform:translateY(-2px); }}
   .ico {{ font-family:"PaxmeetIcons"; font-size:38px; line-height:1; color:var(--accent); }}
   .name {{ font-size:12px; color:var(--sub); text-align:center; word-break:break-word; }}
-  .cell.copied .name {{ color:#4ade80; }}
+  .empty {{ padding:40px 24px; color:var(--sub); }}
+
+  /* modal */
+  .backdrop {{ position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(3px);
+               display:flex; align-items:center; justify-content:center; padding:20px; z-index:20;
+               opacity:0; transition:.15s; }}
+  .backdrop.show {{ opacity:1; }}
+  .modal {{ background:var(--card); border:1px solid var(--line); border-radius:18px; width:min(560px,100%);
+            padding:24px; box-shadow:0 20px 60px rgba(0,0,0,.5); transform:scale(.96); transition:.15s; }}
+  .backdrop.show .modal {{ transform:scale(1); }}
+  .mhead {{ display:flex; align-items:center; gap:16px; margin-bottom:20px; }}
+  .mhead .mico {{ font-family:"PaxmeetIcons"; font-size:48px; color:var(--accent); line-height:1;
+                  width:80px; height:80px; display:flex; align-items:center; justify-content:center;
+                  background:var(--bg); border-radius:14px; border:1px solid var(--line); }}
+  .mhead .mname {{ font-size:20px; font-weight:600; }}
+  .mhead .mclose {{ margin-left:auto; background:none; border:none; color:var(--sub); font-size:26px;
+                    cursor:pointer; line-height:1; padding:4px 8px; border-radius:8px; }}
+  .mhead .mclose:hover {{ background:var(--bg); color:var(--txt); }}
+  .snip {{ margin-bottom:14px; }}
+  .snip .lbl {{ font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--sub); margin-bottom:6px; }}
+  .snip .row {{ display:flex; align-items:stretch; gap:8px; }}
+  .snip code {{ flex:1; font-family:"SF Mono",Menlo,Consolas,monospace; font-size:13px; color:#d6c9ff;
+                background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:11px 13px;
+                overflow-x:auto; white-space:nowrap; }}
+  .snip .cp {{ background:var(--accent); color:#fff; border:none; border-radius:10px; padding:0 14px;
+               font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; }}
+  .snip .cp:hover {{ filter:brightness(1.1); }}
+  .snip .cp.ok {{ background:#22c55e; }}
+
   .toast {{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
             background:var(--accent); color:#fff; padding:10px 18px; border-radius:10px; font-size:13px;
-            opacity:0; transition:.2s; pointer-events:none; }}
+            opacity:0; transition:.2s; pointer-events:none; z-index:30; }}
   .toast.show {{ opacity:1; transform:translateX(-50%) translateY(0); }}
-  .empty {{ padding:40px 24px; color:var(--sub); }}
 </style>
 </head>
 <body>
   <header>
     <h1>paxmeet<span>_icons</span></h1>
-    <div class="sub">{len(items)} icons · click any to copy its Flutter code · type to filter</div>
+    <div class="sub">{len(items)} icons · click any to see Flutter &amp; web code · type to filter</div>
     <input id="q" placeholder="Search icons…" autocomplete="off">
   </header>
   <div class="grid" id="grid">
 {cells}
   </div>
   <div class="empty" id="empty" hidden>No icons match.</div>
+
+  <div class="backdrop" id="backdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="mhead">
+        <span class="mico" id="mico"></span>
+        <span class="mname" id="mname"></span>
+        <button class="mclose" id="mclose" aria-label="Close">&times;</button>
+      </div>
+      <div class="snip"><div class="lbl">Flutter</div><div class="row">
+        <code id="cFlutter"></code><button class="cp" data-for="cFlutter">Copy</button></div></div>
+      <div class="snip"><div class="lbl">React / Next.js</div><div class="row">
+        <code id="cReact"></code><button class="cp" data-for="cReact">Copy</button></div></div>
+      <div class="snip"><div class="lbl">HTML (CSS class)</div><div class="row">
+        <code id="cHtml"></code><button class="cp" data-for="cHtml">Copy</button></div></div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 <script>
   const q = document.getElementById('q');
   const cells = [...document.querySelectorAll('.cell')];
   const empty = document.getElementById('empty');
   const toast = document.getElementById('toast');
+  const backdrop = document.getElementById('backdrop');
+  const mico = document.getElementById('mico'), mname = document.getElementById('mname');
+  const cFlutter = document.getElementById('cFlutter'), cReact = document.getElementById('cReact'), cHtml = document.getElementById('cHtml');
   let tt;
+
   q.addEventListener('input', () => {{
     const v = q.value.trim().toLowerCase();
     let shown = 0;
     cells.forEach(c => {{ const ok = c.dataset.name.toLowerCase().includes(v); c.hidden = !ok; if (ok) shown++; }});
     empty.hidden = shown > 0;
   }});
-  cells.forEach(c => c.addEventListener('click', async () => {{
-    const code = c.dataset.code;
-    try {{ await navigator.clipboard.writeText(code); }} catch (e) {{}}
-    c.classList.add('copied'); setTimeout(() => c.classList.remove('copied'), 800);
-    toast.textContent = 'Copied  ' + code;
-    toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => toast.classList.remove('show'), 1400);
+
+  function showToast(msg) {{
+    toast.textContent = msg; toast.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(() => toast.classList.remove('show'), 1400);
+  }}
+
+  function openModal(name, cp) {{
+    mico.innerHTML = '&#x' + cp + ';';
+    mname.textContent = name;
+    cFlutter.textContent = 'Icon(PaxmeetIcons.' + name + ')';
+    cReact.textContent = '<PaxmeetIcon name="' + name + '" />';
+    cHtml.textContent = '<i class="pmi pmi-' + name + '"></i>';
+    backdrop.hidden = false;
+    requestAnimationFrame(() => backdrop.classList.add('show'));
+  }}
+  function closeModal() {{
+    backdrop.classList.remove('show');
+    setTimeout(() => {{ backdrop.hidden = true; }}, 150);
+  }}
+
+  cells.forEach(c => c.addEventListener('click', () => openModal(c.dataset.name, c.dataset.cp)));
+  document.getElementById('mclose').addEventListener('click', closeModal);
+  backdrop.addEventListener('click', e => {{ if (e.target === backdrop) closeModal(); }});
+  document.addEventListener('keydown', e => {{ if (e.key === 'Escape' && !backdrop.hidden) closeModal(); }});
+
+  document.querySelectorAll('.cp').forEach(btn => btn.addEventListener('click', async () => {{
+    const text = document.getElementById(btn.dataset.for).textContent;
+    try {{ await navigator.clipboard.writeText(text); }} catch (e) {{}}
+    const old = btn.textContent; btn.textContent = '✓'; btn.classList.add('ok');
+    setTimeout(() => {{ btn.textContent = old; btn.classList.remove('ok'); }}, 900);
+    showToast('Copied  ' + text);
   }}));
 </script>
 </body>
