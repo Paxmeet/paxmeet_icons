@@ -43,7 +43,7 @@ html = f'''<!DOCTYPE html>
     src: url("data:font/ttf;base64,{b64}") format("truetype");
     font-display: block;
   }}
-  :root {{ --bg:#0f1014; --card:#1a1b22; --line:#2a2c36; --txt:#e7e7ee; --sub:#9aa0b4; --accent:#7c4dff; }}
+  :root {{ --bg:#0f1014; --card:#1a1b22; --line:#2a2c36; --txt:#e7e7ee; --sub:#9aa0b4; --accent:#7332D6; }}
   * {{ box-sizing:border-box; }}
   [hidden] {{ display:none !important; }}
   body {{ margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
@@ -89,7 +89,7 @@ html = f'''<!DOCTYPE html>
   .snip {{ margin-bottom:14px; }}
   .snip .lbl {{ font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--sub); margin-bottom:6px; }}
   .snip .row {{ display:flex; align-items:stretch; gap:8px; }}
-  .snip code {{ flex:1; font-family:"SF Mono",Menlo,Consolas,monospace; font-size:13px; color:#d6c9ff;
+  .snip code {{ flex:1; font-family:"SF Mono",Menlo,Consolas,monospace; font-size:13px; color:#c9b3ef;
                 background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:11px 13px;
                 overflow-x:auto; white-space:nowrap; }}
   .snip .cp {{ background:var(--accent); color:#fff; border:none; border-radius:10px; padding:0 14px;

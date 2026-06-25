@@ -33,9 +33,9 @@ doc = f'''<!DOCTYPE html>
   * {{ box-sizing: border-box; }}
   body {{ font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
           color: #1c1d22; font-size: 12px; line-height: 1.55; margin: 0; }}
-  .cover {{ text-align: center; padding: 40px 0 28px; border-bottom: 3px solid #7c4dff; margin-bottom: 24px; }}
+  .cover {{ text-align: center; padding: 40px 0 28px; border-bottom: 3px solid #7332D6; margin-bottom: 24px; }}
   .cover h1 {{ font-size: 30px; margin: 0; }}
-  .cover h1 span {{ color: #7c4dff; }}
+  .cover h1 span {{ color: #7332D6; }}
   .cover p {{ color: #6b7280; margin: 6px 0 0; }}
   h1 {{ font-size: 20px; color: #2a1a55; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px; margin-top: 4px; }}
   h2 {{ font-size: 15px; color: #4c2fa6; margin-top: 22px; }}
