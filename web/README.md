@@ -20,36 +20,40 @@ are **identical** to Flutter, so the team uses one convention everywhere:
 
 ---
 
-## Setup (Next.js App Router, the layout used by Paxmeet_NJS)
+## Setup (Next.js App Router) — install from GitHub
 
-1. **Copy** this folder into the site, e.g. `src/components/paxmeet-icons/`.
+Recommended: install the package straight from the repo (needs read-access to the
+private repo). No manual file copying.
 
-2. **Import the CSS once** — in `src/app/layout.js`, as a JS import:
+1. **Install**
+   ```bash
+   npm install github:letssuhail/paxmeet_icons
+   ```
+
+2. **Transpile the package** — `next.config.mjs`
+   ```js
+   const nextConfig = { transpilePackages: ['paxmeet_icons'] };
+   ```
+
+3. **Import the CSS once** — `src/app/layout.js`
    ```js
    import "./globals.css";
-   import "@/components/paxmeet-icons/paxmeet-icons.css";
+   import "paxmeet_icons/css";
    ```
-   (`PaxmeetIcon.jsx` also imports the CSS itself, so importing the component anywhere is enough.)
 
-   > ⚠️ Do **not** add `@import "...paxmeet-icons.css"` inside `globals.css` if that
-   > file already has other `@import` rules (e.g. Google Fonts). The bundler inlines
-   > the icon rules in place, pushing the other `@import` below them, and CSS
-   > requires every `@import` to come first — Next.js will throw
-   > *"@import rules must precede all rules"*. The JS import above avoids this.
-
-3. **Use it** in any component:
+4. **Use it**
    ```jsx
-   import { PaxmeetIcon } from "@/components/paxmeet-icons/PaxmeetIcon";
+   import { PaxmeetIcon } from "paxmeet_icons";
 
-   export default function Example() {
-     return (
-       <button>
-         <PaxmeetIcon name="search" size={20} color="#7332D6" />
-         Search
-       </button>
-     );
-   }
+   <PaxmeetIcon name="search" size={20} color="#7332D6" />
    ```
+
+`paxmeet_icons/names` exports `paxmeetIconNames` (the full list).
+Update later with `npm update paxmeet_icons`.
+
+### Alternative: copy the files (no GitHub access)
+Copy this folder into the site (`cp -r web/* src/components/paxmeet-icons/`) and
+import from that local path instead. Same component and CSS.
 
 ### Prefer plain CSS classes (no component)?
 After importing the CSS, just use:

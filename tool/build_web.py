@@ -159,22 +159,31 @@ html = f'''<!DOCTYPE html>
       <div class="isec">
         <h3>Website (Next.js / React)</h3>
         <div class="istep"><div class="num">1</div><div class="body">
-          <p class="muted">Copy the package's <b>web/</b> files into your site</p>
+          <p class="muted">Install from GitHub <span class="muted">(needs repo read-access)</span></p>
           <div class="snip"><div class="row">
-            <code id="iW1">cp -r paxmeet_icons/web/* src/components/paxmeet-icons/</code>
+            <code id="iW1">npm install github:letssuhail/paxmeet_icons</code>
             <button class="cp" data-for="iW1">Copy</button></div></div>
         </div></div>
         <div class="istep"><div class="num">2</div><div class="body">
-          <p class="muted">Import the CSS once in <b>app/layout.js</b></p>
+          <p class="muted">Allow the package to transpile - in <b>next.config.mjs</b></p>
           <div class="snip"><div class="row">
-            <code id="iW2">import "@/components/paxmeet-icons/paxmeet-icons.css";</code>
+            <code id="iW2">transpilePackages: ['paxmeet_icons'],</code>
             <button class="cp" data-for="iW2">Copy</button></div></div>
         </div></div>
         <div class="istep"><div class="num">3</div><div class="body">
+          <p class="muted">Import the CSS once in <b>app/layout.js</b></p>
+          <div class="snip"><div class="row">
+            <code id="iW3">import "paxmeet_icons/css";</code>
+            <button class="cp" data-for="iW3">Copy</button></div></div>
+        </div></div>
+        <div class="istep"><div class="num">4</div><div class="body">
           <p class="muted">Use anywhere</p>
           <div class="snip"><div class="row">
-            <code id="iW3">&lt;PaxmeetIcon name="home" /&gt;</code>
-            <button class="cp" data-for="iW3">Copy</button></div></div>
+            <code id="iW4">import {{ PaxmeetIcon }} from "paxmeet_icons";</code>
+            <button class="cp" data-for="iW4">Copy</button></div></div>
+          <div class="snip"><div class="row">
+            <code id="iW5">&lt;PaxmeetIcon name="home" /&gt;</code>
+            <button class="cp" data-for="iW5">Copy</button></div></div>
         </div></div>
       </div>
 

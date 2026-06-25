@@ -61,28 +61,31 @@ package. The color comes from Flutter (`color:`), the font is monochrome.
 
 ## B) Web (Next.js / React)
 
-The package ships ready-to-use web assets in its `web/` folder:
-`paxmeet-icons.css`, `PaxmeetIcon.jsx`, `icon-names.js`.
+Install straight from GitHub — just like the Flutter dependency, no manual file
+copying. The consumer needs **read-access to the (private) repo** (their git/npm
+must be authenticated to GitHub).
 
-### 1. Copy the assets into the site
+### 1. Install from GitHub
 ```bash
-git clone https://github.com/letssuhail/paxmeet_icons.git
-mkdir -p <your-site>/src/components/paxmeet-icons
-cp paxmeet_icons/web/* <your-site>/src/components/paxmeet-icons/
+npm install github:letssuhail/paxmeet_icons
 ```
 
-### 2. Load the CSS once (App Router → `src/app/layout.js`)
+### 2. Let Next.js transpile the package — in `next.config.mjs`
+```js
+const nextConfig = {
+  transpilePackages: ['paxmeet_icons'],
+};
+```
+
+### 3. Load the CSS once (App Router → `src/app/layout.js`)
 ```js
 import "./globals.css";
-import "@/components/paxmeet-icons/paxmeet-icons.css";
+import "paxmeet_icons/css";
 ```
-> ⚠️ Use a **JS import** like above. Do **not** add `@import "...paxmeet-icons.css"`
-> inside `globals.css` if it already has other `@import`s (e.g. Google Fonts) —
-> CSS requires all `@import`s first, and Next.js will error.
 
-### 3. Use it
+### 4. Use it
 ```jsx
-import { PaxmeetIcon } from "@/components/paxmeet-icons/PaxmeetIcon";
+import { PaxmeetIcon } from "paxmeet_icons";
 
 <PaxmeetIcon name="search" size={20} color="#7332D6" />
 ```
@@ -91,10 +94,15 @@ Or with plain CSS classes (no component):
 <i className="pmi pmi-search" style={{ fontSize: 20, color: "#7332D6" }} />
 ```
 
-`icon-names.js` exports `paxmeetIconNames` — the full list, handy for dropdowns.
+`paxmeet_icons/names` exports `paxmeetIconNames` — the full list, handy for dropdowns.
 
-> **TypeScript site?** Rename `PaxmeetIcon.jsx` → `.tsx` and type the props:
-> `{ name: string; size?: number; color?: string; className?: string }`.
+**Updating later:** `npm update paxmeet_icons` (or reinstall) pulls the latest from `main`.
+
+> **TypeScript site?** Props are `{ name: string; size?: number; color?: string; className?: string }`.
+
+> **No GitHub access / prefer not to install?** You can instead copy the package's
+> `web/` folder into your project (`cp -r paxmeet_icons/web/* src/components/paxmeet-icons/`)
+> and import from that local path. The git-install above is the cleaner option.
 
 ---
 

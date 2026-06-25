@@ -94,34 +94,36 @@ tree-shaking turns off.</p>
 </blockquote>
 <hr />
 <h2 id="b-web-nextjs-react">B) Web (Next.js / React)</h2>
-<p>The package ships ready-to-use web assets in its <code>web/</code> folder:
-<code>paxmeet-icons.css</code>, <code>PaxmeetIcon.jsx</code>, <code>icon-names.js</code>.</p>
-<h3 id="1-copy-the-assets-into-the-site">1. Copy the assets into the site</h3>
-<pre><code class="language-bash">git clone https://github.com/letssuhail/paxmeet_icons.git
-mkdir -p &lt;your-site&gt;/src/components/paxmeet-icons
-cp paxmeet_icons/web/* &lt;your-site&gt;/src/components/paxmeet-icons/
+<p>Install straight from GitHub — just like the Flutter dependency, no manual file
+copying. The consumer needs <strong>read-access to the (private) repo</strong> (their git/npm
+must be authenticated to GitHub).</p>
+<h3 id="1-install-from-github">1. Install from GitHub</h3>
+<pre><code class="language-bash">npm install github:letssuhail/paxmeet_icons
 </code></pre>
-<h3 id="2-load-the-css-once-app-router-srcapplayoutjs">2. Load the CSS once (App Router → <code>src/app/layout.js</code>)</h3>
+<h3 id="2-let-nextjs-transpile-the-package-in-nextconfigmjs">2. Let Next.js transpile the package — in <code>next.config.mjs</code></h3>
+<pre><code class="language-js">const nextConfig = {
+  transpilePackages: ['paxmeet_icons'],
+};
+</code></pre>
+<h3 id="3-load-the-css-once-app-router-srcapplayoutjs">3. Load the CSS once (App Router → <code>src/app/layout.js</code>)</h3>
 <pre><code class="language-js">import &quot;./globals.css&quot;;
-import &quot;@/components/paxmeet-icons/paxmeet-icons.css&quot;;
+import &quot;paxmeet_icons/css&quot;;
 </code></pre>
-<blockquote>
-<p>⚠️ Use a <strong>JS import</strong> like above. Do <strong>not</strong> add <code>@import "...paxmeet-icons.css"</code>
-inside <code>globals.css</code> if it already has other <code>@import</code>s (e.g. Google Fonts) —
-CSS requires all <code>@import</code>s first, and Next.js will error.</p>
-</blockquote>
-<h3 id="3-use-it">3. Use it</h3>
-<pre><code class="language-jsx">import { PaxmeetIcon } from &quot;@/components/paxmeet-icons/PaxmeetIcon&quot;;
+<h3 id="4-use-it">4. Use it</h3>
+<pre><code class="language-jsx">import { PaxmeetIcon } from &quot;paxmeet_icons&quot;;
 
 &lt;PaxmeetIcon name=&quot;search&quot; size={20} color=&quot;#7332D6&quot; /&gt;
 </code></pre>
 <p>Or with plain CSS classes (no component):</p>
 <pre><code class="language-jsx">&lt;i className=&quot;pmi pmi-search&quot; style={{ fontSize: 20, color: &quot;#7332D6&quot; }} /&gt;
 </code></pre>
-<p><code>icon-names.js</code> exports <code>paxmeetIconNames</code> — the full list, handy for dropdowns.</p>
+<p><code>paxmeet_icons/names</code> exports <code>paxmeetIconNames</code> — the full list, handy for dropdowns.</p>
+<p><strong>Updating later:</strong> <code>npm update paxmeet_icons</code> (or reinstall) pulls the latest from <code>main</code>.</p>
 <blockquote>
-<p><strong>TypeScript site?</strong> Rename <code>PaxmeetIcon.jsx</code> → <code>.tsx</code> and type the props:
-<code>{ name: string; size?: number; color?: string; className?: string }</code>.</p>
+<p><strong>TypeScript site?</strong> Props are <code>{ name: string; size?: number; color?: string; className?: string }</code>.</p>
+<p><strong>No GitHub access / prefer not to install?</strong> You can instead copy the package's
+<code>web/</code> folder into your project (<code>cp -r paxmeet_icons/web/* src/components/paxmeet-icons/</code>)
+and import from that local path. The git-install above is the cleaner option.</p>
 </blockquote>
 <hr />
 <h2 id="finding-icon-names">Finding icon names</h2>
