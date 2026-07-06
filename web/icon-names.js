@@ -1,5 +1,9 @@
 // Generated list of icon names.
 export const paxmeetIconNames = [
+  "aboutLogo",
+  "aboutLogo1",
+  "aboutLogo2",
+  "aboutLogo3",
   "add",
   "addCircle",
   "addSquare",
