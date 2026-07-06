@@ -105,6 +105,7 @@ export const paxmeetIconNames = [
   "check",
   "checkIn",
   "chrome",
+  "circle1",
   "clipboard",
   "clipboardClose",
   "clipboardExport",
