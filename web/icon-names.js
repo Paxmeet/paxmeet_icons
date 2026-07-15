@@ -66,6 +66,7 @@ export const paxmeetIconNames = [
   "batteryEmpty1",
   "batteryFull",
   "bill",
+  "blockIcon",
   "bookSaved",
   "bookmark2",
   "box2",
